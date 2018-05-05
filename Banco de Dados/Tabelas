@@ -1,0 +1,286 @@
+CREATE DATABASE TCC;
+
+USE TCC;
+
+CREATE TABLE IF NOT EXISTS Estabelecimento (
+	id_estabelecimento INT NOT NULL AUTO_INCREMENT,
+	nome_estabelecimento VARCHAR(30) NOT NULL, 
+	descricao_estabelecimento VARCHAR(300),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	endereco_estabelecimento VARCHAR(300),
+	cidade_estabelecimento VARCHAR(30),
+	PRIMARY KEY (id_estabelecimento)
+);
+
+INSERT INTO Estabelecimento (id_estabelecimento, nome_estabelecimento, descricao_estabelecimento) VALUES
+(1, 'TCC Sushi', 'Sushi Bar'),
+(2, 'Casa Nutri', 'Vegan'),
+(3, 'Chimarrao', 'Churrascaria'),
+(4, 'Taberna', 'Lanchonete'),
+(5, 'Bueno', 'Comida Mexicana' ),
+(6, 'Sanera', 'Comida Francesa'),
+(7, 'Dr Boteco', 'Cervejaria'),
+(8, 'Zuffa', 'Cervejaria'),
+(9, 'Opa Bier', 'Cervejaria'),
+(10, 'Saaal', 'Temperos');
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Niveis_acesso (
+	id_niveis_acesso INT NOT NULL AUTO_INCREMENT,
+	nome_niveis_acesso VARCHAR(30),
+	PRIMARY KEY (id_niveis_acesso)	
+);
+
+INSERT INTO Niveis_acesso (id_niveis_acesso, nome_niveis_acesso) VALUES
+(1, 'Administrador'),
+(2, 'Atendente'),
+(3, 'Cliente');
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Usuarios (
+	id_usuario INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT,
+	id_niveis_acesso INT,
+	id_usuario_firebase VARCHAR(30), 
+	nome_usuario VARCHAR(30) NOT NULL,
+	login_usuario VARCHAR(30) NOT NULL,
+	senha_usuario VARCHAR(50) NOT NULL,
+	email_usuario VARCHAR(30) NOT NULL,
+	cidade_usuario VARCHAR(30) NOT NULL,
+	sexo_usuario VARCHAR(1) NOT NULL,
+	data_nascimento VARCHAR(30) NOT NULL,
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	FOREIGN KEY (id_niveis_acesso) REFERENCES Niveis_acesso (id_niveis_acesso),
+	PRIMARY KEY (id_usuario)
+);
+
+INSERT INTO Usuarios (id_usuario, id_estabelecimento, nome_usuario, login_usuario, senha_usuario, email_usuario, id_niveis_acesso, cidade_usuario, sexo_usuario, data_nascimento) VALUES
+(1, 1, 'AdministradoX', 'admin', '202cb962ac59075b964b07152d234b70', 'admin@admin.com', 1, 'cidade1', 'M', "10/10/1990"),
+(2, 1, 'AtendenteX','aten', '202cb962ac59075b964b07152d234b70', 'aten@aten.com', 2, 'cidade1', 'M', "10/10/1990"),
+(3, 1, 'AlunoX', 'cli', '202cb962ac59075b964b07152d234b70', 'cli@cli.com', 3, 'cidade1', 'M', "10/10/1990"),
+(4, 1, 'Yuri', 'teste', '202cb962ac59075b964b07152d234b70', 'teste@teste.com', 2, 'cidade1', 'M', "10/10/1990"),
+(5, 1, 'Joao', 'joao', '202cb962ac59075b964b07152d234b70', 'aehaehea@hehae.com', 2, 'cidade1', 'M', "10/10/1990"),
+(6, 1, 'Vilma', 'vilma', '202cb962ac59075b964b07152d234b70', 'vilma@teste.com', 2, 'cidade1', 'M', "10/10/1990"),
+(7, 1, 'Carlos', 'carlos', '202cb962ac59075b964b07152d234b70', 'calors@hehae.com', 2, 'cidade1', 'M', "10/10/1990"),
+(8, 1, 'Suzi', 'Suzi', '202cb962ac59075b964b07152d234b70', 'asadsa@teste.com', 2, 'cidade1', 'M', "10/10/1990"),
+(9, 1, 'Pedro', 'pedro', '202cb962ac59075b964b07152d234b70', 'zbga@hehae.com', 2, 'cidade1', 'M', "10/10/1990");
+
+
+
+
+CREATE TABLE IF NOT EXISTS Ingrediente (
+	id_ingrediente INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	nome_ingrediente VARCHAR(30) NOT NULL,
+	descricao_ingrediente VARCHAR(300),
+	data_registro DATETIME DEFAULT	CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	PRIMARY KEY (id_ingrediente)
+);
+
+INSERT INTO Ingrediente (id_ingrediente, id_estabelecimento, nome_ingrediente, descricao_ingrediente) VALUES
+(1, 1, 'Cenoura', 'xxxxxxxxxxxx'),
+(2, 1, 'Alface', 'zzzzzzzzzz'),
+(3, 1, 'Tomate', 'yyyyyyyyy'),
+(4, 1, 'Arroz', 'hhhhhhhhhhhhh'),
+(5, 1, 'Açucar', 'bbbbbbbbbbbbbbb'),
+(6, 1, 'Sal', 'ggggggggggg'),
+(7, 1, 'Atum', 'nnnnnnnnnnnnn'),
+(8, 1, 'Soja', 'aaaaaaaaaaaaa');
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Categoria (
+	id_categoria INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	nome_categoria VARCHAR(30),
+	descricao_categoria VARCHAR(300),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	PRIMARY KEY (id_categoria)
+);
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Item_menu (
+	id_item_menu INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	nome_item_menu VARCHAR(50) NOT NULL,
+	preco_item_menu FLOAT(10) NOT NULL,
+	serve_qtd_pessoa INT,
+	descricao_item_menu VARCHAR(500),
+	id_categoria INT,
+	imagem_item_menu LONGBLOB,
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_categoria) REFERENCES Categoria (id_categoria),
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	PRIMARY KEY (id_item_menu)
+);
+
+INSERT INTO Item_menu (id_item_menu, id_estabelecimento, nome_item_menu, preco_item_menu, serve_qtd_pessoa, descricao_item_menu) VALUES
+(1, 1, 'Massa', 20.00, 1, 'Massa espaguete'),
+(2, 1, 'XXXXXXXXXX', 30, 4, 'BxxxxxxxxxxxxxxxxxxxBBBBBBBBBBBBBBBB'),
+(3, 2, 'Carne de panela', 20.00, 1, 'Massa espaguete'),
+(4, 3, 'Miojo', 30, 4, 'BBBBBBBBBBBBBBxxxxxxxxxxxxxxxxxBBB'),
+(5, 4, 'Polenta', 20.00, 1, 'Massa espaguete'),
+(6, 5, 'Picanha', 30, 4, 'BBBBBxxxxxxxxxxxxxxxxxxBBBBBBBBBBBB'),
+(7, 6, 'Massa', 2000, 1, 'Massa espaguete'),
+(8, 7, 'Pizza', 30, 4, 'BBBBBBBBxxxxxxxxxxxxxxxxxxxBBBBBBBBB'),
+(9, 8, 'Sushi', 000, 1, 'Massa espaguete'),
+(10, 9, 'Cachorro-quente', 30, 4, 'BBBBBBBxxxxxxxxxxxxxxxxxxxBBBBBBBBBB');
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Item_menuXIngrediente (
+	id_item_menu INT NOT NULL,
+	id_ingrediente INT NOT NULL,
+	FOREIGN KEY (id_item_menu) REFERENCES Item_menu (id_item_menu),
+	FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente (id_ingrediente)
+);
+
+INSERT INTO Item_menuXIngrediente (id_item_menu, id_ingrediente) VALUES
+(1,1),
+(1,2),
+(1,3),
+(1,4),
+(2,1),
+(2,4),
+(2,5),
+(2,6),
+(2,7),
+(2,8);
+
+
+
+CREATE TABLE IF NOT EXISTS Status_pedido (
+	id_status_pedido INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	nome_status_pedido VARCHAR(30) NOT NULL,
+	descricao_status_pedido VARCHAR(300),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	PRIMARY KEY (id_status_pedido)
+);
+
+INSERT INTO Status_pedido (id_estabelecimento, nome_status_pedido) VALUES 
+(1, 'Aberto'),
+(1, 'Fechado'),
+(1, 'Pendente'),
+(2, 'Aberto'),
+(2, 'Fechado'),
+(2, 'Pendente'),
+(3, 'Aberto'),
+(3, 'Fechado'),
+(3, 'Pendente');
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Status_comanda (
+	id_status_comanda INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	nome_status_comanda VARCHAR(30) NOT NULL,
+	descricao_status_comanda VARCHAR(300),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	PRIMARY KEY (id_status_comanda)
+);
+
+INSERT INTO Status_comanda (id_estabelecimento, nome_status_comanda) VALUES 
+(1, 'Aberto'),
+(1, 'Fechado'),
+(1, 'Pendente'),
+(2, 'Aberto'),
+(2, 'Fechado'),
+(2, 'Pendente'),
+(3, 'Aberto'),
+(3, 'Fechado'),
+(3, 'Pendente');
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Comanda (
+	id_comanda INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	id_usuario INT NOT NULL,
+	id_status_comanda INT NOT NULL, 
+	valor_total FLOAT(10),
+	mesa VARCHAR(30),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	FOREIGN KEY (id_usuario) REFERENCES Usuarios (id_usuario),
+	FOREIGN KEY (id_status_comanda) REFERENCES Status_comanda (id_status_comanda),
+	PRIMARY KEY (id_comanda)
+);
+
+INSERT INTO Comanda (id_estabelecimento, id_usuario, id_status_comanda, valor_total, mesa) VALUES
+(1, 4, 1, 33.00, '47'),
+(1, 5, 2, 500.00, '22'),
+(1, 6, 3, 120.00, '51'),
+(2, 7, 1, 15.00, '41'),
+(2, 8, 2, 79.00, '32'),
+(2, 9, 3, 110.00, '71');
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS Pedido (
+	id_pedido INT NOT NULL AUTO_INCREMENT,
+	id_estabelecimento INT NOT NULL,
+	id_item_menu INT NOT NULL,
+	id_comanda INT NOT NULL,
+	id_status_pedido INT NOT NULL,
+	observacao_pedido VARCHAR(300),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (id_estabelecimento) REFERENCES Estabelecimento (id_estabelecimento),
+	FOREIGN KEY (id_item_menu) REFERENCES Item_menu (id_item_menu),
+	FOREIGN KEY (id_status_pedido) REFERENCES Status_pedido (id_status_pedido),
+	PRIMARY KEY (id_pedido)
+);
+
+INSERT INTO Pedido (id_estabelecimento, id_item_menu, id_comanda, id_status_pedido, observacao_pedido) VALUES
+(1, 1, 1, 1, 'est1'),
+(2, 1, 1, 1, 'est2'),
+(3, 1, 1, 1, 'est3'),
+(4, 1, 1, 1, 'est4'),
+(5, 1, 1, 1, 'est5'),
+(6, 1, 1, 1, 'est6'),
+(7, 1, 1, 1, 'est7'),
+(8, 1, 1, 1, 'est8'),
+(9, 1, 1, 1, 'est9'),
+(10, 1, 1, 1, 'est10');
+
+
+
+
+CREATE TABLE IF NOT EXISTS Historico_pesquisa (
+	id_historico_pesquisa INT NOT NULL AUTO_INCREMENT,
+	id_usuario INT,
+	nome_prato VARCHAR(30),
+	valor_prato FLOAT(10),
+	foi_pedido BOOLEAN,
+	categoria VARCHAR(30),
+	ingredientes_removidos VARCHAR(30),
+	ingredientes_mantidos VARCHAR(30),
+	data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id_historico_pesquisa),
+	FOREIGN KEY (id_usuario) REFERENCES Usuarios (id_usuario)
+);
